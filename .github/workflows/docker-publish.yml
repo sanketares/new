@@ -1,4 +1,4 @@
-name: Build and Push Docker Image
+name: Build, Push Docker Image, and Deploy
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build:
+  build_and_deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -31,7 +31,18 @@ jobs:
         file: ./Dockerfile
         push: true
         tags: user/repository:latest
-        # Optionally, you can add more tags or use build arguments here
 
     - name: Logout from DockerHub
       run: docker logout
+
+    - name: Run Docker container
+      run: |
+        docker run -d --name my_app -p 80:80 user/repository:latest
+
+    - name: Check container status
+      run: |
+        docker ps
+
+    - name: Verify site is live
+      run: |
+        curl --head http://localhost | grep "200 OK"
