@@ -39,7 +39,12 @@ jobs:
 
     - name: Save Docker image as tar file
       run: |
-        docker save my_image:latest -o my_image_latest.tar
+        if docker images --format "{{.Repository}}:{{.Tag}}" | grep -q "my_image:latest"; then
+          docker save my_image:latest -o my_image_latest.tar
+        else
+          echo "Image my_image:latest not found!"
+          exit 1
+        fi
 
     - name: Upload Docker image artifact
       id: upload-artifact
