@@ -34,6 +34,9 @@ jobs:
         push: false
         tags: my_image:latest
 
+    - name: List Docker images
+      run: docker images
+
     - name: Save Docker image as tar file
       run: |
         docker save my_image:latest -o my_image_latest.tar
@@ -57,6 +60,9 @@ jobs:
     - name: Load Docker image
       run: |
         docker load -i my_image_latest.tar
+
+    - name: List Docker images after load
+      run: docker images
 
     - name: Run Docker container
       run: |
